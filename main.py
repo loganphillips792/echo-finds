@@ -60,15 +60,23 @@ logger = logging.getLogger('my_module')
 logger.info('starting script')
 
 def create_database():
-    conn = sqlite3.connect('water_bottles.db')
+    conn = sqlite3.connect(os.getenv('DATABASE_NAME'))
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS bottles
-                (name TEXT, release_date TEXT)''')
+    create_table_query = '''
+        CREATE TABLE IF NOT EXISTS bottles(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            release_date TEXT,
+            status TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    '''
+    c.execute(create_table_query)
     conn.commit()
     conn.close()
 
 def save_to_database(name, release_date):
-    conn = sqlite3.connect('water_bottles.db')
+    conn = sqlite3.connect(os.getenv('DATABASE_NAME'))
     c = conn.cursor()
     c.execute("INSERT INTO bottles (name, release_date) VALUES (?, ?)", (name, release_date))
     conn.commit()

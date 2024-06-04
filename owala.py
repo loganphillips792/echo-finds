@@ -16,6 +16,9 @@ import pytz
 
 
 def scrape(driver, url, logger):
+    conn = sqlite3.connect(os.getenv('DATABASE_NAME'))
+    c = conn.cursor()
+
     driver.get(url)
 
     # Wait until the elements with class 'color-drop__blocks' are present. This is the grid of products
@@ -43,11 +46,20 @@ def scrape(driver, url, logger):
         if 'Available Now' in product_release_date:
             logger.info(f'{product_name} is available now!')
             # if the product is available now, then the class is 'addcart-button'
-            button_element = container.find_element(By.CLASS_NAME, 'addcart-button')
-            button_text = button_element.text if button_element else 'N/A'
+            # button_element = container.find_element(By.CLASS_NAME, 'addcart-button')
+            # button_text = button_element.text if button_element else 'N/A'
+            c.execute("INSERT INTO bottles (name, release_date, status) VALUES (?, ?, ?)", (product_name, "", "Available Now"))
+            conn.commit()
+
+            logger.info(f'Available item Saved to database: {product_name}, "", {button_text}')
+            
             continue
         elif 'Sold out' in button_text:
             logger.info(f'{product_name} is sold out!')
+            c.execute("INSERT INTO bottles (name, release_date, status) VALUES (?, ?, ?)", (product_name, "", button_text))
+            conn.commit()
+        
+            logger.info(f'Sold Out item Saved to database: {product_name}, {utc_time}, {button_text}')
             continue
         else:
             logger.info(f'product {product_name} will be released on {product_release_date}')
@@ -78,7 +90,11 @@ def scrape(driver, url, logger):
 
         logger.info(f"UTC time: {utc_time.strftime('%Y-%m-%d %H:%M:%S %Z')}")
 
-
+        c.execute("INSERT INTO bottles (name, release_date, status) VALUES (?, ?, ?)", (product_name, utc_time, button_text))
+        conn.commit()
+        
+        logger.info(f'Saved to database: {product_name}, {utc_time}, {button_text}')
+    conn.close()
 
 
     # bottle_elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.product__container')))  # Update this
