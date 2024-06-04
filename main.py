@@ -80,7 +80,7 @@ def scrape_website(url):
     # Set up Selenium WebDriver
     options = Options()
     # options.headless = True  # Run in headless mode (without opening a browser window)
-    # options.add_argument('--headless')
+    options.add_argument('--headless')
     options.binary_location = os.getenv('CHROME_BROWSER_PATH')  # Path to Chrome binary on macOS
     service = Service(executable_path='./chromedriver', log_path='NUL')  # Replace with your WebDriver's path
     driver = webdriver.Chrome(service=service, options=options)
@@ -117,23 +117,7 @@ def scrape_website(url):
     #     save_to_database(name, release_date)
     
     driver.close()
-    
-    
-    
-    
-    
-    
-    
-    
-    # page = requests.get(url, timeout=5)
-    
-    # soup = BeautifulSoup(page.content, 'html.parser')
-    # # bottle_elements = soup.select('.product__container')
-    # print(soup.prettify)
-
-    # bottle_elements = soup.find_all("div", class_="")
-
-    
+        
 
 def main():
     create_database()
