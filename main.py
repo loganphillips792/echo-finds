@@ -11,6 +11,7 @@ import os
 from dotenv import load_dotenv
 import logging
 import logging.config
+import owala
 
 load_dotenv()
 
@@ -42,7 +43,7 @@ LOGGING_CONFIG = {
             'propagate': True
         },
         'my_module': {  # a specific logger for 'my_module'
-            'handlers': ['console'],
+            'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': False
         },
@@ -56,7 +57,7 @@ logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger('my_module')
 
 # use logger. If one is not specified, it will default to the root one
-logging.info('starting script')
+logger.info('starting script')
 
 def create_database():
     conn = sqlite3.connect('water_bottles.db')
@@ -72,11 +73,18 @@ def save_to_database(name, release_date):
     c.execute("INSERT INTO bottles (name, release_date) VALUES (?, ?)", (name, release_date))
     conn.commit()
     conn.close()
+    logger.info(f'Saved to database: {name}, {release_date}, {button_text}')
 
-def scrape_website(url):
+
+def scrape_website(driver, url):
     # print(f"Scraping website {url}")
-    logging.info(f'scraping {url}')
-    
+    logger.info(f'scraping {url}')
+    owala.scrape(driver, url, logger)    
+
+
+def main():
+    create_database()
+
     # Set up Selenium WebDriver
     options = Options()
     # options.headless = True  # Run in headless mode (without opening a browser window)
@@ -84,49 +92,13 @@ def scrape_website(url):
     options.binary_location = os.getenv('CHROME_BROWSER_PATH')  # Path to Chrome binary on macOS
     service = Service(executable_path='./chromedriver', log_path='NUL')  # Replace with your WebDriver's path
     driver = webdriver.Chrome(service=service, options=options)
-    
-    driver.get(url)
-
-    # Wait until the elements with class 'color-drop__blocks' are present. This is the grid of products
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CLASS_NAME, 'color-drop__blocks'))
-    )
-    
-    # Wait for the elements to be present
-    # wait = WebDriverWait(driver, 10)
-
-    product_containers = driver.find_elements(By.CLASS_NAME,'product__text-container')
-
-    product_details = []
-    for container in product_containers:
-        product_name_element = container.find_element(By.CLASS_NAME, 'product__name')
-        product_name = product_name_element.text if product_name_element else 'N/A'
-        logging.info(f'product name is {product_name}')
-
-
-    # bottle_elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.product__container')))  # Update this
-    # release_elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.some-class-for-date')))  # Update this
-
-    # for bottle in bottle_elements:
-    #         print("hi")
-    #         print(bottle)
-
-    # for bottle, release in zip(bottle_elements, release_elements):
-    #     name = bottle.text.strip()
-    #     release_date = release.text.strip()
-    #     save_to_database(name, release_date)
-    
-    driver.close()
-        
-
-def main():
-    create_database()
 
     if os.getenv('TRACK_OWALA') == 'True':
         url = os.getenv('OWALA_URL')
         if not url:
             raise ValueError("OWALA_URL environment variable is not set.")
-        scrape_website(url)
+        scrape_website(driver, url)
+    driver.quit()
 
     
 if __name__ == '__main__':
