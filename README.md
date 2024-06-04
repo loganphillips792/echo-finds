@@ -25,6 +25,11 @@ The Selenium library in Python requires a driver depending on the web browser yo
 3. Enable virtual environment
 4. python3 main.py
 
+# Running via Docker Compose:
+
+docker-compose up --build
+
+
 # Support
 
 These are the sites that are currently supported:
