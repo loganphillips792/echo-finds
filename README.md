@@ -1,3 +1,5 @@
+https://stackoverflow.com/questions/70955307/how-to-install-google-chrome-in-a-docker-container
+
 # Echo Finds
 
 Echo is a nymph known for her voice, symbolizing repeated alerts
