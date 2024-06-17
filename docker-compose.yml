@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    env_file:
+      - .env  # Ensure this file is in the same directory as your docker-compose.yml or specify the correct path
+    volumes:
+      - app-data:/water_bottles.db
+
+volumes:
+  app-data:
+    driver: local

@@ -1,3 +1,11 @@
+https://stackoverflow.com/questions/70955307/how-to-install-google-chrome-in-a-docker-container
+
+# TODO
+
+- backup sqlite file to S3
+- have script automatically deploy to digital ocean
+- have it run through Docker
+
 # Echo Finds
 
 Echo is a nymph known for her voice, symbolizing repeated alerts
@@ -24,6 +32,11 @@ The Selenium library in Python requires a driver depending on the web browser yo
 2. Create environment file (.env)
 3. Enable virtual environment
 4. python3 main.py
+
+# Running via Docker Compose:
+
+docker-compose up --build
+
 
 # Support
 
