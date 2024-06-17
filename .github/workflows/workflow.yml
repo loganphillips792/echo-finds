@@ -19,6 +19,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             # Update and restart your Python script
+            echo $(pwd)
             cd /path/to/your/script
             git pull
             # Restart your Python script (e.g., using systemd or supervisor)
