@@ -4,6 +4,7 @@ https://stackoverflow.com/questions/70955307/how-to-install-google-chrome-in-a-d
 
 - backup sqlite file to S3
 - have script automatically deploy to digital ocean
+- have it run through Docker
 
 # Echo Finds
 
