@@ -1,5 +1,10 @@
 https://stackoverflow.com/questions/70955307/how-to-install-google-chrome-in-a-docker-container
 
+# TODO
+
+- backup sqlite file to S3
+- have script automatically deploy to digital ocean
+
 # Echo Finds
 
 Echo is a nymph known for her voice, symbolizing repeated alerts
