@@ -17,6 +17,12 @@ jobs:
           username: ${{ secrets.DIGITALOCEAN_USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
+          script: |
+            # Update and restart your Python script
+            cd /path/to/your/script
+            git pull
+            # Restart your Python script (e.g., using systemd or supervisor)
+            sudo systemctl restart your-script
       - name: Check user
         run: |
           a=$(whoami)
