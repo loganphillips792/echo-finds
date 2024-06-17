@@ -17,6 +17,7 @@ jobs:
           username: ${{ secrets.DIGITALOCEAN_USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
+      - name: Check user
         run: |
           a=$(whoami)
           echo "User is : $a"
