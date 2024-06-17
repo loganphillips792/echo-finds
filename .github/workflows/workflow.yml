@@ -17,7 +17,9 @@ jobs:
           username: ${{ secrets.DIGITALOCEAN_USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: whoami
+        run: |
+          a=$(whoami)
+          echo "User is : $a"
 
       # - name: Deploy to DigitalOcean
       #   uses: appleboy/ssh-action@master
