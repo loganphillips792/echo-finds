@@ -1,5 +1,7 @@
 https://stackoverflow.com/questions/70955307/how-to-install-google-chrome-in-a-docker-container
 
+https://www.digitalocean.com/community/questions/how-to-keep-running-python-script-all-the-time
+
 # TODO
 
 - backup sqlite file to S3
@@ -43,3 +45,94 @@ docker-compose up --build
 These are the sites that are currently supported:
 
 - [Owala Color Drop](https://owalalife.com/pages/color-drop)
+
+# Setting  up on Digital Ocean
+
+1. Create a new Droplet
+
+`ssh username@ip_of_droplet`
+
+and then enter your password.
+
+You can find this info via Droplets > Select Droplet > Access
+
+2. Clone Repo
+
+`cd ~`
+
+`git clone https://github.com/loganphillips792/echo-finds.git`
+
+`cd echo-finds`
+
+3. Install Chrome Driver 
+
+4. Set up project and virtual environment
+
+`cd ~/echo-finds`
+
+`vim .env`
+
+```
+OWALA_URL=https://owalalife.com/pages/color-drop
+CHROME_BROWSER_PATH=/Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+TRACK_OWALA=True
+DATABASE_NAME=water_bottles.db
+```
+
+5. Set up the Virtual Environment
+
+`python3 -m venv ~/EchoFindsVirtualEnv`
+
+`source ~/EchoFindsVirtualEnv/bin/activate`
+
+`pip install -r requirements.txt`
+
+
+5. Ensure the script is executable
+
+Add a shebang line at the top and then change its permissions
+
+
+`#!/usr/bin/env python3`
+
+`chmod +x ~/EchoFinds/main.py`
+
+6. Create a Systemd Service file
+
+`sudo vim /etc/systemd/system/echo-finds.service`
+
+```
+[Unit]
+Description=My Python Script Service
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/root/EchoFindsVirtualEnv/bin/python /root/echo-finds/main.py
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+```
+
+7. Reload Systemd and Start your Service
+
+
+`sudo systemctl daemon-reload`
+`sudo systemctl start echo-finds.service`
+`sudo systemctl status echo-finds.service`
+
+8. Enable Your Service to Start on Boot
+
+`sudo systemctl enable echo-finds.service`
+
+
+Additional commands:
+
+Stop the service: `sudo systemctl stop echo-finds.service`
+Restart the service: `sudo systemctl restart echo-finds.service`
+View logs: Use journalctl. For example: `journalctl -u echo-finds.service`
+
+
+Remember that when you modify the service file or the script itself, you should usually reload or restart the service to apply the changes.
+
