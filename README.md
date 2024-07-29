@@ -2,6 +2,10 @@ https://stackoverflow.com/questions/70955307/how-to-install-google-chrome-in-a-d
 
 https://www.digitalocean.com/community/questions/how-to-keep-running-python-script-all-the-time
 
+https://www.digitalocean.com/community/questions/how-do-i-set-up-chromedriver-path-in-droplets
+
+
+
 # TODO
 
 - backup sqlite file to S3
@@ -28,6 +32,13 @@ This app tracks the release of specific products, notifying you when a new produ
 
 The Selenium library in Python requires a driver depending on the web browser you are using. In this case, we are using Chrome, so go to this site: https://googlechromelabs.github.io/chrome-for-testing/ and then when the download completes, drag and drop the executable into the root of this folder. The version of chromedriver you need to download will depend on the version of the Chrome browser you are using.
 
+If you are only using a Unix terminal, then you can run the following commands:
+
+wget https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chrome-linux64.zip
+apt-get install unzip
+unzip chrome-linux64.zip
+
+
 ## Running application
 
 1. Go to project root
@@ -48,13 +59,6 @@ These are the sites that are currently supported:
 
 # Setting  up on Digital Ocean
 
-1. Create a new Droplet
-
-`ssh username@ip_of_droplet`
-
-and then enter your password.
-
-You can find this info via Droplets > Select Droplet > Access
 
 2. Clone Repo
 
@@ -90,49 +94,16 @@ DATABASE_NAME=water_bottles.db
 
 5. Ensure the script is executable
 
-Add a shebang line at the top and then change its permissions
-
-
-`#!/usr/bin/env python3`
-
 `chmod +x ~/EchoFinds/main.py`
 
-6. Create a Systemd Service file
+6. Set up Cron Job
 
-`sudo vim /etc/systemd/system/echo-finds.service`
+crontab -e
 
-```
-[Unit]
-Description=My Python Script Service
-After=multi-user.target
+add the following to the crontab file:
 
-[Service]
-Type=simple
-ExecStart=/root/EchoFindsVirtualEnv/bin/python /root/echo-finds/main.py
-Restart=on-abort
+`* * * * * /root/EchoFindsVirtualEnv/bin/python /root/echo-finds/main.py > /var/log/echo-finds-cron.log 2>&1`
 
-[Install]
-WantedBy=multi-user.target
-```
+7. Verify the cron job: crontab -l
 
-7. Reload Systemd and Start your Service
-
-
-`sudo systemctl daemon-reload`
-`sudo systemctl start echo-finds.service`
-`sudo systemctl status echo-finds.service`
-
-8. Enable Your Service to Start on Boot
-
-`sudo systemctl enable echo-finds.service`
-
-
-Additional commands:
-
-Stop the service: `sudo systemctl stop echo-finds.service`
-Restart the service: `sudo systemctl restart echo-finds.service`
-View logs: Use journalctl. For example: `journalctl -u echo-finds.service`
-
-
-Remember that when you modify the service file or the script itself, you should usually reload or restart the service to apply the changes.
-
+8. 
