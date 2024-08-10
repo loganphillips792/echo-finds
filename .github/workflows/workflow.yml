@@ -24,9 +24,9 @@ jobs:
             # Update and restart your Python script
             echo $(pwd)
             cd /path/to/your/script
-            git pull
+            # git pull
             # Restart your Python script (e.g., using systemd or supervisor)
-            sudo systemctl restart your-script
+            # sudo systemctl restart your-script
       - name: Check user
         run: |
           a=$(whoami)
