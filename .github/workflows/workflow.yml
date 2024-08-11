@@ -19,6 +19,7 @@ jobs:
           host: ${{ secrets.DIGITALOCEAN_HOST }}
           username: ${{ secrets.DIGITALOCEAN_USERNAME }}
           key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
+          debug: true
           script: |
             # Update and restart your Python script
             echo $(pwd)
