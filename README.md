@@ -59,6 +59,7 @@ These are the sites that are currently supported:
 
 # Setting  up on Digital Ocean
 
+1. SSH into droplet: ssh -i ssh root@ipv4_address_of_droplet
 
 2. Clone Repo
 
@@ -106,4 +107,8 @@ add the following to the crontab file:
 
 7. Verify the cron job: crontab -l
 
-8. 
+8. Generate ssh key and upload it to droplet (do these steps from local machine):
+    ssh-keygen
+    ssh-copy-id -i key.pub root@ipv4_address_of_droplet
+
+9. Add SSH private Key to Github actions
